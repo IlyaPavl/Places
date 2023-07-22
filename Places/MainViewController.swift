@@ -14,11 +14,7 @@ class MainViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Избранные места"
-//        let tableView = UITableView(frame: view.bounds, style: .insetGrouped)
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        
-//        view.addSubview(tableView)
+
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -39,6 +35,9 @@ class MainViewController: UITableViewController {
         var cellConfig = UIListContentConfiguration.cell()
         cellConfig.text = restaurantNames[indexPath.row]
         cell.contentConfiguration = cellConfig
+        
+        cell.imageView?.image = UIImage(named: restaurantNames[indexPath.row])
+        
         return cell
     }
 
