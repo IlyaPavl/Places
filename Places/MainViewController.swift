@@ -9,7 +9,7 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
-    let restaurantNames = ["Burger Heroes", "Kitchen", "Bonsai", "Дастархан", "Индокитай", "Х.О", "Балкан Гриль", "Sherlock Holmes", "Speak Easy", "Morris Pub", "Вкусные истории", "Классик", "Love&Life", "Шок", "Бочка"]
+    let restaurantNames = ["Burger Heroes", "Kitchen", "Bonsai", "Дастархан", "Индокитай", "X.O", "Балкан Гриль", "Sherlock Holmes", "Speak Easy", "Morris Pub", "Вкусные истории", "Классик", "Love&Life", "Шок", "Бочка"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,13 +32,22 @@ class MainViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
+        // конфигурация ячейки (новый способ, который пришел с iOS 14)
         var cellConfig = UIListContentConfiguration.cell()
         cellConfig.text = restaurantNames[indexPath.row]
+        cellConfig.image = UIImage(named: restaurantNames[indexPath.row])
+        cellConfig.imageProperties.cornerRadius = cell.frame.size.height / 2
+        
         cell.contentConfiguration = cellConfig
         
-        cell.imageView?.image = UIImage(named: restaurantNames[indexPath.row])
-        
+                
         return cell
+    }
+    
+    // MARK: - Table view delegate
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 85
     }
 
     /*
