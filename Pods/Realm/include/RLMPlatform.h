@@ -1,0 +1,1 @@
+#define REALM_IOPLATFORMUUID @"WARNING: The active Xcode command line tools, as returned by 'xcode-select -p', are not from Xcode. The newest version of Xcode will be used instead. C675AD3A-50BC-5DB2-B707-EF25A2674EF5"
