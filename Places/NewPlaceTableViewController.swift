@@ -10,8 +10,10 @@ import PhotosUI
 
 class NewPlaceTableViewController: UITableViewController {
     
-    //объявляем новую переменную, в которую будем писать данные при добавлении новых мест и его параметров
-    var newPlace: Place?
+ // объявляем новую переменную, в которую будем писать данные при добавлении новых мест и его параметров (для добавления в базу)
+ // var newPlace = Place()
+    // создаем данную переменную, чтобы хранить в ней текущее значение ячейки
+    var currentPlace: Place?
     var imageIsChanged = false
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -25,10 +27,12 @@ class NewPlaceTableViewController: UITableViewController {
         super.viewDidLoad()
         self.navigationItem.title = "Новое место"
         
+        
         // делаем кнопку "Сохранить" недоступной
         saveButton.isEnabled = false
         nameOfPlace.addTarget(self, action: #selector(updateSaveButtonState), for: .editingChanged)
         
+        setUpEditScreen()
     }
     
     
@@ -72,7 +76,7 @@ class NewPlaceTableViewController: UITableViewController {
         }
     }
     
-    func saveNewPlace() {
+    func savePlace() {
         
         var image: UIImage?
         
@@ -80,10 +84,51 @@ class NewPlaceTableViewController: UITableViewController {
             image = imageOfPlace.image
         } else {
             let config = UIImage.SymbolConfiguration(hierarchicalColor: .darkGray)
-            image = UIImage(systemName: "fork.knife.circle.fill", withConfiguration: config)
+            image = UIImage(systemName: "fork.knife.circle", withConfiguration: config)
         }
         
-        newPlace = Place(name: nameOfPlace.text!, location: locationOfPlace.text, type: typeOfPlace.text, image: image, restaurantImage: nil)
+        let imageData = image?.pngData()
+        let newPlace = Place(name: nameOfPlace.text!, location: locationOfPlace.text, type: typeOfPlace.text, imageData: imageData)
+        
+        // данная проверка нужна, чтобы разделить момент добавления или редактирования ячейки
+        if currentPlace != nil {
+            try! realm.write {
+                currentPlace?.name = newPlace.name
+                currentPlace?.location = newPlace.location
+                currentPlace?.type = newPlace.type
+                currentPlace?.imageData = newPlace.imageData
+            }
+        } else {
+            // сохраняем объект в базе
+            StorageManager.saveObject(newPlace)
+        }
+        
+        /*
+         это более замороченный способ инициализации данных. Чтобы было проще, создадим в модели convinience инициализатор
+        let newPlace = Place()
+
+        newPlace.name = nameOfPlace.text!
+        newPlace.location = locationOfPlace.text
+        newPlace.type = typeOfPlace.text
+        newPlace.imageData = imageData
+         */
+    }
+    
+    private func setUpEditScreen() {
+        if currentPlace != nil {
+            
+            imageIsChanged = true
+            guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
+            
+            imageOfPlace.image = image
+            imageOfPlace.contentMode = .scaleAspectFill
+            nameOfPlace.text = currentPlace?.name
+            locationOfPlace.text = currentPlace?.location
+            typeOfPlace.text = currentPlace?.type
+            
+            title = currentPlace?.name
+            saveButton.isEnabled = true
+        }
     }
     
     @IBAction func cancelAction(_ sender: Any) {

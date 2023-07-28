@@ -5,25 +5,42 @@
 //  Created by Ilya Pavlov on 22.07.2023.
 //
 
-import UIKit
+import RealmSwift
 
-struct Place {
+class Place: Object {
     
-    var name: String
-    var location: String?
-    var type: String?
-    var image: UIImage?
-    var restaurantImage: String?
+    @Persisted var name = ""
+    @Persisted var location: String?
+    @Persisted var type: String?
+    @Persisted var imageData: Data?
     
-    static let restaurantNames = ["Burger Heroes", "Kitchen", "Bonsai", "Дастархан", "Индокитай", "X.O", "Балкан Гриль", "Sherlock Holmes", "Speak Easy", "Morris Pub", "Вкусные истории", "Классик", "Love&Life", "Шок", "Бочка"]
+    convenience init(name: String , location: String?, type: String?, imageData: Data?) {
+        self.init()
+        self.name = name
+        self.location = location
+        self.type = type
+        self.imageData = imageData
+    }
+    /* создаем данный метод для того, чтобы занести наши предустановленные
+
+    let restaurantNames = ["Burger Heroes", "Kitchen", "Bonsai", "Дастархан", "Индокитай", "X.O", "Балкан Гриль", "Sherlock Holmes", "Speak Easy", "Morris Pub", "Вкусные истории", "Классик", "Love&Life", "Шок", "Бочка"]
     
-    static func getPlaces() -> [Place] {
-        var places = [Place]()
+    func savePlaces() {
         
         for place in restaurantNames {
-            places.append(Place(name: place, location: "Москва", type: "Ресторан", image: nil, restaurantImage: place)) 
+            let image = UIImage(named: place)
+            let newPlace = Place()
+            
+            guard let imageData = image?.pngData() else {return}
+            
+            newPlace.name = place
+            newPlace.location = "Москва"
+            newPlace.type = "Ресторан"
+            newPlace.imageData = imageData
+            
+            // вызываем метод, который сохраняет данные в базу
+            StorageManager.saveObject(newPlace)
         }
-        
-        return places
     }
+     */
 }
