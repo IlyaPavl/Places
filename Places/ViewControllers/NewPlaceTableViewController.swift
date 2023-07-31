@@ -33,6 +33,8 @@ class NewPlaceTableViewController: UITableViewController {
         nameOfPlace.addTarget(self, action: #selector(updateSaveButtonState), for: .editingChanged)
         
         setUpEditScreen()
+        
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 0))
     }
     
     
@@ -120,6 +122,7 @@ class NewPlaceTableViewController: UITableViewController {
             imageIsChanged = true
             guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
             
+ 
             imageOfPlace.image = image
             imageOfPlace.contentMode = .scaleAspectFill
             nameOfPlace.text = currentPlace?.name

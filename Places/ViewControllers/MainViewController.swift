@@ -11,23 +11,94 @@ import RealmSwift
 
 class MainViewController: UITableViewController {
 
+    private let searchController = UISearchController(searchResultsController: nil)
+    
     //необходимо выполнить запрос к базе, чтобы отобразить находящиеся в ней данные. Для этого пишем results - аналог массива в realm - автообновляемый тип контейнера и в качестве типа указываем наш Place
+    private var places: Results<Place>!
+    // массив, в котором будут хранится результаты поиска
+    private var filteredPlaces: Results<Place>!
+    // проверка пустой ли searchBar
+    private var searchBarIsEmpty: Bool {
+        guard let text = searchController.searchBar.text else {return false}
+        
+        return text.isEmpty
+    }
+    // свойства, чтобы активировать searchBar
+    private var isFiltering: Bool {
+        return searchController.isActive && !searchBarIsEmpty
+    }
+    
+    private var topMenu = UIMenu()
 
-    var places: Results<Place>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Избранные места"
         self.tableView.separatorInset.left = 95
+        
         
         // чтобы отобразить все заведения на экране, необходимо инициализировать объект places. Подставляем Place.self, так как нам нужно обратиться не к модели данных, а к типу
         places = realm.objects(Place.self)
+        
+        // настройка NavigationBar
+        setUpMenu()
+        setUpNavBar()
+        
+        // настройка поиска
+        searchController.searchResultsUpdater = self // сообщаем, что получателем текста в поисковой строке будет наш класс
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Поиск"
+        navigationItem.searchController = searchController
+        searchController.definesPresentationContext = true
 
+    }
+    
+    // MARK: - Navigation Bar Set up
+    
+    private func setUpMenu() {
+
+        
+
+        let sortUpDown = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
+            self.places = self.places.sorted(byKeyPath: "date", ascending: false)
+            self.tableView.reloadData()
+        }
+        let sortDownUp = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
+            self.places = self.places.sorted(byKeyPath: "date", ascending: true)
+            self.tableView.reloadData()
+        }
+        let alphabetUpDown = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
+            self.places = self.places.sorted(byKeyPath: "name", ascending: false)
+            self.tableView.reloadData()
+        }
+        let alphabetDownUp = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
+            self.places = self.places.sorted(byKeyPath: "name", ascending: true)
+            self.tableView.reloadData()
+        }
+
+        
+        let subMenuDate = UIMenu(title: "Дата", image: UIImage(systemName: "calendar"), children: [sortUpDown, sortDownUp])
+        let subMenuName = UIMenu(title: "Имя", image: UIImage(systemName: "character.cursor.ibeam"), children: [alphabetUpDown, alphabetDownUp])
+        topMenu = UIMenu(title: "Cортировка", children: [subMenuDate, subMenuName])
+
+    }
+    
+    private func setUpNavBar() {
+        let barButtonLeft = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), menu: topMenu)
+        navigationItem.leftBarButtonItem = barButtonLeft
+        navigationItem.title = "Избранные места"
     }
 
     // MARK: - Table view data source
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if isFiltering {
+            return filteredPlaces.count
+        }
         return places.isEmpty ? 0 : places.count
     }
 
@@ -51,9 +122,14 @@ class MainViewController: UITableViewController {
             cell.placeImage.image = place.image
         }
          */
-
-        let place = places[indexPath.row]
-    
+        
+        var place = Place()
+        
+        if isFiltering {
+            place = filteredPlaces[indexPath.row]
+        } else {
+            place = places[indexPath.row]
+        }
         
         cell.nameOfPlace.text = place.name
         cell.locationOfPlace.text = place.location
@@ -93,8 +169,13 @@ class MainViewController: UITableViewController {
         guard segue.identifier == "showDetail" else { return }
         guard let indexPath = tableView.indexPathForSelectedRow else {return}
         
-        let place = places[indexPath.row]
-        
+        let place: Place
+        if isFiltering {
+            place = filteredPlaces[indexPath.row]
+        } else {
+            place = places[indexPath.row]
+        }
+                
         let navigVC = segue.destination as! UINavigationController
         let editVC = navigVC.topViewController as! NewPlaceTableViewController
         editVC.currentPlace = place
@@ -110,4 +191,18 @@ class MainViewController: UITableViewController {
         tableView.reloadData()
     }
 
+}
+
+
+extension MainViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text!)
+    }
+    
+    private func filterContentForSearchText(_ searchText: String) {
+        
+        filteredPlaces = places.filter("name CONTAINS[c] %@ OR location CONTAINS[c] %@ OR type CONTAINS[c] %@", searchText, searchText, searchText)
+        tableView.reloadData()
+    }
+    
 }

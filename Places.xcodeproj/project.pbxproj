@@ -16,6 +16,7 @@
 		C7850F672A69BBA800CCDAA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7850F662A69BBA800CCDAA3 /* Assets.xcassets */; };
 		C7850F6A2A69BBA800CCDAA3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7850F682A69BBA800CCDAA3 /* LaunchScreen.storyboard */; };
 		C7850F722A69C26D00CCDAA3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7850F712A69C26D00CCDAA3 /* MainViewController.swift */; };
+		C792E3152A76792A00AAF59A /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C792E3142A76792A00AAF59A /* RatingControl.swift */; };
 		C7DC90A92A71AAE10017836E /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DC90A82A71AAE10017836E /* StorageManager.swift */; };
 		C7E289AB2A6C66A600C6C962 /* NewPlaceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E289AA2A6C66A600C6C962 /* NewPlaceTableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,7 @@
 		C7850F692A69BBA800CCDAA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C7850F6B2A69BBA800CCDAA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C7850F712A69C26D00CCDAA3 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		C792E3142A76792A00AAF59A /* RatingControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
 		C7DC90A82A71AAE10017836E /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		C7E289AA2A6C66A600C6C962 /* NewPlaceTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPlaceTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -81,17 +83,34 @@
 			children = (
 				C7850F5D2A69BBA600CCDAA3 /* AppDelegate.swift */,
 				C7850F5F2A69BBA600CCDAA3 /* SceneDelegate.swift */,
-				C72F1DF32A6C22F8003CCDCD /* PlaceModel.swift */,
-				C7DC90A82A71AAE10017836E /* StorageManager.swift */,
-				C7850F712A69C26D00CCDAA3 /* MainViewController.swift */,
-				C72F1DF12A6C1B0F003CCDCD /* CustomTableViewCell.swift */,
-				C7E289AA2A6C66A600C6C962 /* NewPlaceTableViewController.swift */,
+				C792E3162A76794100AAF59A /* Data Management */,
+				C792E3172A76796000AAF59A /* ViewControllers */,
 				C7850F632A69BBA600CCDAA3 /* Main.storyboard */,
 				C7850F662A69BBA800CCDAA3 /* Assets.xcassets */,
 				C7850F682A69BBA800CCDAA3 /* LaunchScreen.storyboard */,
 				C7850F6B2A69BBA800CCDAA3 /* Info.plist */,
 			);
 			path = Places;
+			sourceTree = "<group>";
+		};
+		C792E3162A76794100AAF59A /* Data Management */ = {
+			isa = PBXGroup;
+			children = (
+				C72F1DF32A6C22F8003CCDCD /* PlaceModel.swift */,
+				C7DC90A82A71AAE10017836E /* StorageManager.swift */,
+			);
+			path = "Data Management";
+			sourceTree = "<group>";
+		};
+		C792E3172A76796000AAF59A /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				C7850F712A69C26D00CCDAA3 /* MainViewController.swift */,
+				C72F1DF12A6C1B0F003CCDCD /* CustomTableViewCell.swift */,
+				C792E3142A76792A00AAF59A /* RatingControl.swift */,
+				C7E289AA2A6C66A600C6C962 /* NewPlaceTableViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		FD3DE2788A5F992FF6FFAF64 /* Pods */ = {
@@ -222,6 +241,7 @@
 				C7850F722A69C26D00CCDAA3 /* MainViewController.swift in Sources */,
 				C7850F5E2A69BBA600CCDAA3 /* AppDelegate.swift in Sources */,
 				C7DC90A92A71AAE10017836E /* StorageManager.swift in Sources */,
+				C792E3152A76792A00AAF59A /* RatingControl.swift in Sources */,
 				C72F1DF42A6C22F8003CCDCD /* PlaceModel.swift in Sources */,
 				C72F1DF22A6C1B0F003CCDCD /* CustomTableViewCell.swift in Sources */,
 				C7850F602A69BBA600CCDAA3 /* SceneDelegate.swift in Sources */,
