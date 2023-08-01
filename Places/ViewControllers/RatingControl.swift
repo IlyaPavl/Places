@@ -7,6 +7,7 @@
 
 import UIKit
 
+@IBDesignable
 class RatingControl: UIStackView {
     
     var rating = 0 {
@@ -18,12 +19,12 @@ class RatingControl: UIStackView {
     // создаем массив кнопок
     private var ratingButtons = [UIButton]()
     
-    var starSize: CGSize = CGSize(width: 45.0, height: 45.0) {
+    @IBInspectable var starSize: CGSize = CGSize(width: 35.0, height: 35.0) {
         didSet {
             setUpButtons()
         }
     }
-    var starCount: Int = 5 {
+    @IBInspectable var starCount: Int = 5 {
         didSet {
             setUpButtons()
         }
@@ -57,7 +58,6 @@ class RatingControl: UIStackView {
     
     
     private func setUpButtons() {
-        spacing = 6
         
         for button in ratingButtons {
             removeArrangedSubview(button)

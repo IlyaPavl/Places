@@ -7,6 +7,6 @@ target 'Places' do
 
   # Pods for Places
   pod 'RealmSwift'
-
+  pod 'Cosmos','~> 18.0'
 end
 

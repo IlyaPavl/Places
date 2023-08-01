@@ -99,7 +99,7 @@ class MainViewController: UITableViewController {
         if isFiltering {
             return filteredPlaces.count
         }
-        return places.isEmpty ? 0 : places.count
+        return places.count
     }
 
     
@@ -123,19 +123,14 @@ class MainViewController: UITableViewController {
         }
          */
         
-        var place = Place()
         
-        if isFiltering {
-            place = filteredPlaces[indexPath.row]
-        } else {
-            place = places[indexPath.row]
-        }
+        let place = isFiltering ? filteredPlaces[indexPath.row] : places[indexPath.row]
         
         cell.nameOfPlace.text = place.name
         cell.locationOfPlace.text = place.location
         cell.typeOfPlace.text = place.type
         cell.placeImage.image = UIImage(data: place.imageData!)
-        cell.placeImage.layer.cornerRadius = cell.placeImage.frame.size.height / 2
+        cell.starsView.rating = Int(place.rating)
 
         return cell
     }
@@ -169,12 +164,7 @@ class MainViewController: UITableViewController {
         guard segue.identifier == "showDetail" else { return }
         guard let indexPath = tableView.indexPathForSelectedRow else {return}
         
-        let place: Place
-        if isFiltering {
-            place = filteredPlaces[indexPath.row]
-        } else {
-            place = places[indexPath.row]
-        }
+        let place = isFiltering ? filteredPlaces[indexPath.row] : places[indexPath.row]
                 
         let navigVC = segue.destination as! UINavigationController
         let editVC = navigVC.topViewController as! NewPlaceTableViewController
