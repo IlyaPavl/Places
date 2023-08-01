@@ -292,6 +292,7 @@
                         <outlet property="imageOfPlace" destination="FYm-dZ-9yw" id="WKp-OF-2cs"/>
                         <outlet property="locationOfPlace" destination="dCk-5f-uM7" id="AYa-4F-RTa"/>
                         <outlet property="nameOfPlace" destination="qqn-wB-J2C" id="gOp-Am-897"/>
+                        <outlet property="ratingControl" destination="dl0-mH-Y7r" id="lZX-Nm-cAo"/>
                         <outlet property="saveButton" destination="qOb-Gx-sQ3" id="52J-BK-M9H"/>
                         <outlet property="typeOfPlace" destination="Suz-uv-0Mw" id="dRi-g5-eRb"/>
                     </connections>

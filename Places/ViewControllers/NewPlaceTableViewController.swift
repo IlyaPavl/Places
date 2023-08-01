@@ -13,7 +13,7 @@ class NewPlaceTableViewController: UITableViewController {
  // объявляем новую переменную, в которую будем писать данные при добавлении новых мест и его параметров (для добавления в базу)
  // var newPlace = Place()
     // создаем данную переменную, чтобы хранить в ней текущее значение ячейки
-    var currentPlace: Place?
+    var currentPlace: Place!
     var imageIsChanged = false
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -22,6 +22,7 @@ class NewPlaceTableViewController: UITableViewController {
     @IBOutlet weak var nameOfPlace: UITextField!
     @IBOutlet weak var locationOfPlace: UITextField!
     @IBOutlet weak var typeOfPlace: UITextField!
+    @IBOutlet weak var ratingControl: RatingControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,7 +91,7 @@ class NewPlaceTableViewController: UITableViewController {
         }
         
         let imageData = image?.pngData()
-        let newPlace = Place(name: nameOfPlace.text!, location: locationOfPlace.text, type: typeOfPlace.text, imageData: imageData)
+        let newPlace = Place(name: nameOfPlace.text!, location: locationOfPlace.text, type: typeOfPlace.text, imageData: imageData, rating: Double(ratingControl.rating))
         
         // данная проверка нужна, чтобы разделить момент добавления или редактирования ячейки
         if currentPlace != nil {
@@ -99,6 +100,7 @@ class NewPlaceTableViewController: UITableViewController {
                 currentPlace?.location = newPlace.location
                 currentPlace?.type = newPlace.type
                 currentPlace?.imageData = newPlace.imageData
+                currentPlace?.rating = newPlace.rating
             }
         } else {
             // сохраняем объект в базе
@@ -128,6 +130,7 @@ class NewPlaceTableViewController: UITableViewController {
             nameOfPlace.text = currentPlace?.name
             locationOfPlace.text = currentPlace?.location
             typeOfPlace.text = currentPlace?.type
+            ratingControl.rating = Int(currentPlace.rating)
             
             title = currentPlace?.name
             saveButton.isEnabled = true
