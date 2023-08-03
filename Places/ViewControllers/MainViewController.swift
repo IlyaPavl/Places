@@ -58,27 +58,39 @@ class MainViewController: UITableViewController {
 
         
 
-        let sortUpDown = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
+        let sortDesc = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
             self.places = self.places.sorted(byKeyPath: "date", ascending: false)
             self.tableView.reloadData()
         }
-        let sortDownUp = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
+        let sortAsc = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
             self.places = self.places.sorted(byKeyPath: "date", ascending: true)
             self.tableView.reloadData()
         }
-        let alphabetUpDown = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
+        let alphabetDesc = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
             self.places = self.places.sorted(byKeyPath: "name", ascending: false)
             self.tableView.reloadData()
         }
-        let alphabetDownUp = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
+        let alphabetAsc = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
             self.places = self.places.sorted(byKeyPath: "name", ascending: true)
+            self.tableView.reloadData()
+        }
+        
+        let ratingDesc = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
+            self.places = self.places.sorted(byKeyPath: "rating", ascending: false)
+            self.tableView.reloadData()
+        }
+        
+        let ratingAsc = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
+            self.places = self.places.sorted(byKeyPath: "rating", ascending: true)
             self.tableView.reloadData()
         }
 
         
-        let subMenuDate = UIMenu(title: "Дата", image: UIImage(systemName: "calendar"), children: [sortUpDown, sortDownUp])
-        let subMenuName = UIMenu(title: "Имя", image: UIImage(systemName: "character.cursor.ibeam"), children: [alphabetUpDown, alphabetDownUp])
-        topMenu = UIMenu(title: "Cортировка", children: [subMenuDate, subMenuName])
+        let subMenuDate = UIMenu(title: "Дата", image: UIImage(systemName: "calendar"), children: [sortDesc, sortAsc])
+        let subMenuName = UIMenu(title: "Имя", image: UIImage(systemName: "character.cursor.ibeam"), children: [alphabetDesc, alphabetAsc])
+        let subMenuRate = UIMenu(title: "Рейтинг", image: UIImage(systemName: "star.leadinghalf.filled"), children: [ratingDesc, ratingAsc])
+
+        topMenu = UIMenu(title: "Cортировка", children: [subMenuDate, subMenuName, subMenuRate])
 
     }
     

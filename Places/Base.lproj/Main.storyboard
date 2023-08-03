@@ -4,6 +4,8 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -33,7 +35,7 @@
                                             </constraints>
                                         </imageView>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="0sS-dE-XJF">
-                                            <rect key="frame" x="95" y="10" width="190" height="65"/>
+                                            <rect key="frame" x="95" y="10" width="215" height="65"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PYN-va-tcQ">
                                                     <rect key="frame" x="0.0" y="0.0" width="50.333333333333336" height="21"/>
@@ -65,10 +67,10 @@
                                             </subviews>
                                         </stackView>
                                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="75" placeholderIntrinsicHeight="15" translatesAutoresizingMaskIntoConstraints="NO" id="BH9-lK-979" customClass="RatingControl" customModule="Places" customModuleProvider="target">
-                                            <rect key="frame" x="293" y="35" width="85" height="15"/>
+                                            <rect key="frame" x="318" y="36.666666666666664" width="60" height="12"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="size" keyPath="starSize">
-                                                    <size key="value" width="17" height="15"/>
+                                                    <size key="value" width="12" height="12"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </view>
@@ -138,11 +140,25 @@
                                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <imageReference key="image" image="photo.fill.on.rectangle.fill" catalog="system" symbolScale="default" renderingMode="template"/>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n1v-89-kXC">
+                                                    <rect key="frame" x="303" y="270" width="50" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="50" id="xrK-Zr-EbX"/>
+                                                        <constraint firstAttribute="height" constant="50" id="zrz-CS-v0Y"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" image="mapIcon" title=""/>
+                                                    <connections>
+                                                        <segue destination="Kbj-CQ-4Ld" kind="presentation" identifier="showMap" id="XLt-x9-iDW"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="FYm-dZ-9yw" secondAttribute="trailing" id="22O-i7-MbE"/>
                                                 <constraint firstItem="FYm-dZ-9yw" firstAttribute="leading" secondItem="Efa-nP-Kgp" secondAttribute="leading" id="Czf-69-ddW"/>
+                                                <constraint firstAttribute="bottom" secondItem="n1v-89-kXC" secondAttribute="bottom" id="TXf-Af-A8l"/>
                                                 <constraint firstAttribute="bottom" secondItem="FYm-dZ-9yw" secondAttribute="bottom" id="d2t-5R-Jin"/>
+                                                <constraint firstAttribute="trailing" secondItem="n1v-89-kXC" secondAttribute="trailing" id="lgY-bQ-36X"/>
                                                 <constraint firstItem="FYm-dZ-9yw" firstAttribute="top" secondItem="Efa-nP-Kgp" secondAttribute="top" id="qAQ-T0-Ssz"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -312,6 +328,58 @@
             </objects>
             <point key="canvasLocation" x="2078.6259541984732" y="-27.464788732394368"/>
         </scene>
+        <!--Map View Controller-->
+        <scene sceneID="RXu-BJ-lvG">
+            <objects>
+                <viewController id="Kbj-CQ-4Ld" customClass="MapViewController" customModule="Places" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7Ow-YQ-rWk">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O8t-68-SpN">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                                <standardMapConfiguration key="preferredConfiguration"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t85-g3-zoT">
+                                <rect key="frame" x="301" y="40" width="52" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="hnA-Go-QV0"/>
+                                    <constraint firstAttribute="width" constant="52" id="lda-PY-BVd"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain">
+                                    <imageReference key="image" image="xmark.circle.fill" catalog="system" symbolScale="large" renderingMode="hierarchical-single">
+                                        <hierarchicalColors>
+                                            <color systemColor="labelColor"/>
+                                            <color systemColor="secondaryLabelColor"/>
+                                            <color systemColor="tertiaryLabelColor"/>
+                                        </hierarchicalColors>
+                                    </imageReference>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="closeMapVc" destination="Kbj-CQ-4Ld" eventType="touchUpInside" id="SX6-vM-qBm"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ZFx-pZ-LGO"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ZFx-pZ-LGO" firstAttribute="trailing" secondItem="t85-g3-zoT" secondAttribute="trailing" constant="40" id="BCD-wg-qcn"/>
+                            <constraint firstItem="O8t-68-SpN" firstAttribute="leading" secondItem="ZFx-pZ-LGO" secondAttribute="leading" id="Fme-L2-xYX"/>
+                            <constraint firstItem="t85-g3-zoT" firstAttribute="top" secondItem="ZFx-pZ-LGO" secondAttribute="top" constant="40" id="M5r-VJ-gxa"/>
+                            <constraint firstItem="O8t-68-SpN" firstAttribute="top" secondItem="7Ow-YQ-rWk" secondAttribute="top" id="rzj-Tu-03W"/>
+                            <constraint firstAttribute="bottom" secondItem="O8t-68-SpN" secondAttribute="bottom" id="sa0-MH-NXO"/>
+                            <constraint firstItem="O8t-68-SpN" firstAttribute="trailing" secondItem="ZFx-pZ-LGO" secondAttribute="trailing" id="w9K-fO-gbw"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mavView" destination="O8t-68-SpN" id="zz0-UL-WhP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RCE-no-7kN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3040.4580152671756" y="-27.464788732394368"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="JM4-IT-eSb">
             <objects>
@@ -361,9 +429,20 @@
     </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow.up.arrow.down" catalog="system" width="128" height="97"/>
+        <image name="mapIcon" width="50" height="50"/>
         <image name="photo.fill.on.rectangle.fill" catalog="system" width="128" height="98"/>
+        <image name="xmark.circle.fill" catalog="system" width="128" height="123"/>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tertiaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
