@@ -19,12 +19,14 @@ class RatingControl: UIStackView {
     // создаем массив кнопок
     private var ratingButtons = [UIButton]()
     
-    @IBInspectable var starSize: CGSize = CGSize(width: 35.0, height: 35.0) {
+    @IBInspectable
+    var starSize: CGSize = CGSize(width: 35.0, height: 35.0) {
         didSet {
             setUpButtons()
         }
     }
-    @IBInspectable var starCount: Int = 5 {
+    @IBInspectable
+    var starCount: Int = 5 {
         didSet {
             setUpButtons()
         }

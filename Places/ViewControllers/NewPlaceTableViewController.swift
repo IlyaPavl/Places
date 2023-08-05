@@ -28,17 +28,12 @@ class NewPlaceTableViewController: UITableViewController {
         super.viewDidLoad()
         self.navigationItem.title = "Новое место"
         
-        
         // делаем кнопку "Сохранить" недоступной
         saveButton.isEnabled = false
         nameOfPlace.addTarget(self, action: #selector(updateSaveButtonState), for: .editingChanged)
         
         setUpEditScreen()
-        
-        
     }
-    
-    
     
     // MARK: - Table View delegate
     
@@ -79,17 +74,19 @@ class NewPlaceTableViewController: UITableViewController {
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "showMap" else {return}
+        
+        let mapVC = segue.destination as! MapViewController
+        mapVC.place.name = nameOfPlace.text!
+        mapVC.place.location = locationOfPlace.text
+        mapVC.place.type = typeOfPlace.text
+        mapVC.place.imageData = imageOfPlace.image?.pngData ()
+    }
+    
     func savePlace() {
-        
-        var image: UIImage?
-        
-        if imageIsChanged {
-            image = imageOfPlace.image
-        } else {
-            let config = UIImage.SymbolConfiguration(hierarchicalColor: .darkGray)
-            image = UIImage(systemName: "fork.knife.circle", withConfiguration: config)
-        }
-        
+        let config = UIImage.SymbolConfiguration(hierarchicalColor: .darkGray)
+        let image = imageIsChanged ? imageOfPlace.image : UIImage(systemName: "fork.knife.circle", withConfiguration: config)
         let imageData = image?.pngData()
         let newPlace = Place(name: nameOfPlace.text!, location: locationOfPlace.text, type: typeOfPlace.text, imageData: imageData, rating: Double(ratingControl.rating))
         
@@ -120,11 +117,9 @@ class NewPlaceTableViewController: UITableViewController {
     
     private func setUpEditScreen() {
         if currentPlace != nil {
-            
             imageIsChanged = true
             guard let data = currentPlace?.imageData, let image = UIImage(data: data) else {return}
             
- 
             imageOfPlace.image = image
             imageOfPlace.contentMode = .scaleAspectFill
             nameOfPlace.text = currentPlace?.name
