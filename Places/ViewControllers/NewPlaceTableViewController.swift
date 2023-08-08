@@ -30,9 +30,12 @@ class NewPlaceTableViewController: UITableViewController {
         
         // делаем кнопку "Сохранить" недоступной
         saveButton.isEnabled = false
+        
+        // добавляем условия, что кнопка неактивна, пока не введно название места
         nameOfPlace.addTarget(self, action: #selector(updateSaveButtonState), for: .editingChanged)
         
         setUpEditScreen()
+        
     }
     
     // MARK: - Table View delegate
@@ -75,13 +78,17 @@ class NewPlaceTableViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "showMap" else {return}
+        guard let identifier = segue.identifier, let mapVC = segue.destination as? MapViewController else { return }
         
-        let mapVC = segue.destination as! MapViewController
-        mapVC.place.name = nameOfPlace.text!
-        mapVC.place.location = locationOfPlace.text
-        mapVC.place.type = typeOfPlace.text
-        mapVC.place.imageData = imageOfPlace.image?.pngData ()
+        mapVC.incomeSegueIdentifier = identifier
+        if identifier == "showPlace" {
+            mapVC.place.name = nameOfPlace.text!
+            mapVC.place.location = locationOfPlace.text
+            mapVC.place.type = typeOfPlace.text
+            mapVC.place.imageData = imageOfPlace.image?.pngData()
+        }
+        
+        mapVC.mapViewContorllerDelegate = self
     }
     
     func savePlace() {
@@ -90,7 +97,7 @@ class NewPlaceTableViewController: UITableViewController {
         let imageData = image?.pngData()
         let newPlace = Place(name: nameOfPlace.text!, location: locationOfPlace.text, type: typeOfPlace.text, imageData: imageData, rating: Double(ratingControl.rating))
         
-        // данная проверка нужна, чтобы разделить момент добавления или редактирования ячейки
+        // данная проверка нужна, чтобы разделить два действия: либо добавление нового элемента, либо редактирование ячейки
         if currentPlace != nil {
             try! realm.write {
                 currentPlace?.name = newPlace.name
@@ -115,6 +122,7 @@ class NewPlaceTableViewController: UITableViewController {
          */
     }
     
+    // настраиваем экран, когда нажимаем на ячейку для редактирования
     private func setUpEditScreen() {
         if currentPlace != nil {
             imageIsChanged = true
@@ -132,6 +140,7 @@ class NewPlaceTableViewController: UITableViewController {
         }
     }
     
+    // функционирование кнопки отмены действий
     @IBAction func cancelAction(_ sender: Any) {
         dismiss(animated: true)
     }
@@ -188,4 +197,12 @@ extension NewPlaceTableViewController: UIImagePickerControllerDelegate, UINaviga
         imageOfPlace.clipsToBounds = true
         dismiss(animated: true)
     }
+}
+
+extension NewPlaceTableViewController: MapViewControllerDelegate {
+    func getAddress(_ address: String?) {
+        locationOfPlace.text = address
+    }
+    
+    
 }

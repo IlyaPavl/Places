@@ -15,8 +15,10 @@ class MainViewController: UITableViewController {
     
     //необходимо выполнить запрос к базе, чтобы отобразить находящиеся в ней данные. Для этого пишем results - аналог массива в realm - автообновляемый тип контейнера и в качестве типа указываем наш Place
     private var places: Results<Place>!
+    
     // массив, в котором будут хранится результаты поиска
     private var filteredPlaces: Results<Place>!
+    
     // проверка пустой ли searchBar
     private var searchBarIsEmpty: Bool {
         guard let text = searchController.searchBar.text else {return false}
@@ -54,44 +56,32 @@ class MainViewController: UITableViewController {
     
     // MARK: - Navigation Bar Set up
     
+    // настройка сортировки
     private func setUpMenu() {
 
-        
-
-        let sortDesc = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
-            self.places = self.places.sorted(byKeyPath: "date", ascending: false)
-            self.tableView.reloadData()
-        }
-        let sortAsc = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
-            self.places = self.places.sorted(byKeyPath: "date", ascending: true)
-            self.tableView.reloadData()
-        }
-        let alphabetDesc = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
-            self.places = self.places.sorted(byKeyPath: "name", ascending: false)
-            self.tableView.reloadData()
-        }
-        let alphabetAsc = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
-            self.places = self.places.sorted(byKeyPath: "name", ascending: true)
-            self.tableView.reloadData()
-        }
-        
-        let ratingDesc = UIAction(title: "По убыванию", image: UIImage(systemName: "chevron.down")) { _ in
-            self.places = self.places.sorted(byKeyPath: "rating", ascending: false)
-            self.tableView.reloadData()
-        }
-        
-        let ratingAsc = UIAction(title: "По возрастанию", image: UIImage(systemName: "chevron.up")) { _ in
-            self.places = self.places.sorted(byKeyPath: "rating", ascending: true)
-            self.tableView.reloadData()
+        func createSortingAction(title: String, keyPath: String, ascending: Bool) -> UIAction {
+            return UIAction(title: title, image: UIImage(systemName: ascending ? "chevron.up" : "chevron.down")) { _ in
+                self.places = self.places.sorted(byKeyPath: keyPath, ascending: ascending)
+                self.tableView.reloadData()
+            }
         }
 
-        
-        let subMenuDate = UIMenu(title: "Дата", image: UIImage(systemName: "calendar"), children: [sortDesc, sortAsc])
-        let subMenuName = UIMenu(title: "Имя", image: UIImage(systemName: "character.cursor.ibeam"), children: [alphabetDesc, alphabetAsc])
-        let subMenuRate = UIMenu(title: "Рейтинг", image: UIImage(systemName: "star.leadinghalf.filled"), children: [ratingDesc, ratingAsc])
+        let subMenuDate = UIMenu(title: "Дата", image: UIImage(systemName: "calendar"), children: [
+            createSortingAction(title: "По убыванию", keyPath: "date", ascending: false),
+            createSortingAction(title: "По возрастанию", keyPath: "date", ascending: true)
+        ])
+
+        let subMenuName = UIMenu(title: "Имя", image: UIImage(systemName: "character.cursor.ibeam"), children: [
+            createSortingAction(title: "По убыванию", keyPath: "name", ascending: false),
+            createSortingAction(title: "По возрастанию", keyPath: "name", ascending: true)
+        ])
+
+        let subMenuRate = UIMenu(title: "Рейтинг", image: UIImage(systemName: "star.leadinghalf.filled"), children: [
+            createSortingAction(title: "По убыванию", keyPath: "rating", ascending: false),
+            createSortingAction(title: "По возрастанию", keyPath: "rating", ascending: true)
+        ])
 
         topMenu = UIMenu(title: "Cортировка", children: [subMenuDate, subMenuName, subMenuRate])
-
     }
     
     private func setUpNavBar() {
@@ -117,6 +107,14 @@ class MainViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+        let place = isFiltering ? filteredPlaces[indexPath.row] : places[indexPath.row]
+        
+        cell.nameOfPlace.text = place.name
+        cell.locationOfPlace.text = place.location
+        cell.typeOfPlace.text = place.type
+        cell.placeImage.image = UIImage(data: place.imageData!)
+        cell.starsView.rating = Int(place.rating)
+        
         /*
         конфигурация базовой (некастомной) ячейки (новый способ, который пришел с iOS 14)
         var cellConfig = UIListContentConfiguration.cell()
@@ -127,7 +125,7 @@ class MainViewController: UITableViewController {
          */
          
         /*
-         данное условие было создано тогда6 когда у нас еще не было модели данных
+         данное условие было создано тогда, когда у нас еще не было модели данных
         if place.image == nil {
             cell.placeImage.image = UIImage(named: place.restaurantImage!)
         } else {
@@ -135,20 +133,12 @@ class MainViewController: UITableViewController {
         }
          */
         
-        
-        let place = isFiltering ? filteredPlaces[indexPath.row] : places[indexPath.row]
-        
-        cell.nameOfPlace.text = place.name
-        cell.locationOfPlace.text = place.location
-        cell.typeOfPlace.text = place.type
-        cell.placeImage.image = UIImage(data: place.imageData!)
-        cell.starsView.rating = Int(place.rating)
-
         return cell
     }
     
     // MARK: - Table view data delegate
     
+    // конфигурация действия удалить
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let place = places[indexPath.row]
@@ -170,9 +160,9 @@ class MainViewController: UITableViewController {
     }
      */
     
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        
         guard segue.identifier == "showDetail" else { return }
         guard let indexPath = tableView.indexPathForSelectedRow else {return}
         
@@ -188,7 +178,7 @@ class MainViewController: UITableViewController {
                 
         newPlaceVC.savePlace()
         
-//        данная строка использовалась, чтобы передавать данные между VC. Когда у нас есть база - это не нужно
+//      данная строка использовалась, чтобы передавать данные между VC. Когда у нас есть база - это не нужно
 //      places.append(newPlaceVC.newPlace!)
         tableView.reloadData()
     }
