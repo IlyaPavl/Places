@@ -10,8 +10,8 @@ import PhotosUI
 
 class NewPlaceTableViewController: UITableViewController {
     
- // объявляем новую переменную, в которую будем писать данные при добавлении новых мест и его параметров (для добавления в базу)
- // var newPlace = Place()
+    // объявляем новую переменную, в которую будем писать данные при добавлении новых мест и его параметров (для добавления в базу)
+    // var newPlace = Place()
     // создаем данную переменную, чтобы хранить в ней текущее значение ячейки
     var currentPlace: Place!
     var imageIsChanged = false
@@ -40,7 +40,7 @@ class NewPlaceTableViewController: UITableViewController {
     
     // MARK: - Table View delegate
     
-    // для того, чтобы скрывать клавиатуру при нажатии в любое место. по условию делаем так, что игнорируем то место, где у нас должна быть картинка заведения ё
+    // для того, чтобы скрывать клавиатуру при нажатии в любое место. по условию делаем так, что игнорируем то место, где у нас должна быть картинка заведения
     // + настраиваем всплывающее меню с камерой и фото
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -113,12 +113,12 @@ class NewPlaceTableViewController: UITableViewController {
         
         /*
          это более замороченный способ инициализации данных. Чтобы было проще, создадим в модели convinience инициализатор
-        let newPlace = Place()
-
-        newPlace.name = nameOfPlace.text!
-        newPlace.location = locationOfPlace.text
-        newPlace.type = typeOfPlace.text
-        newPlace.imageData = imageData
+         let newPlace = Place()
+         
+         newPlace.name = nameOfPlace.text!
+         newPlace.location = locationOfPlace.text
+         newPlace.type = typeOfPlace.text
+         newPlace.imageData = imageData
          */
     }
     
@@ -169,6 +169,15 @@ extension NewPlaceTableViewController: UITextFieldDelegate {
 // MARK: - Work with image
 extension NewPlaceTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     // проработка логики работы imagePicker
+    /*
+     1. func chooseImagePicker(source: UIImagePickerController.SourceType) {: Это функция с именем chooseImagePicker, принимающая в качестве параметра тип источника для выбора изображения, который является перечислением UIImagePickerController.SourceType. Тип источника определяет, откуда будет загружено изображение (например, из фотоальбома или с камеры).
+     2. let imagePicker = UIImagePickerController(): Здесь создается объект UIImagePickerController, который будет использован для выбора изображения.
+     3. imagePicker.delegate = self: Здесь устанавливается делегат для объекта imagePicker. Делегатом будет текущий объект, который, вероятно, уже реализует протокол UIImagePickerControllerDelegate.
+     4. imagePicker.allowsEditing = true: Здесь устанавливается свойство allowsEditing для imagePicker в значение true, что позволяет пользователю редактировать выбранное изображение перед его использованием.
+     5. imagePicker.sourceType = source: Здесь устанавливается тип источника для imagePicker, который был передан в качестве параметра в функцию. Тип источника определит, откуда будет загружено изображение.
+     6. imageIsChanged = true: В этой строке устанавливается свойство imageIsChanged в значение true. Судя по контексту, это свойство, вероятно, используется для отслеживания изменения изображения, которое будет выбрано или отредактировано.
+     7. present(imagePicker, animated: true): В конце функции вызывается метод present(_:animated:completion:), чтобы отобразить imagePicker в виде модального контроллера. Параметр animated определяет, будет ли анимация показа контроллера.
+     */
     func chooseImagePicker(source: UIImagePickerController.SourceType) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -181,17 +190,17 @@ extension NewPlaceTableViewController: UIImagePickerControllerDelegate, UINaviga
         present(imagePicker, animated: true)
     }
     
-    // метод для того, чтобы отследить, что изображение выбрано
+    /*
+     Метод для того, чтобы отследить, что изображение выбрано
+     1) imageOfPlace.image = info[.editedImage] as? UIImage: Здесь мы получаем выбранное изображение из словаря info по ключу .editedImage. Этот ключ указывает на отредактированное изображение, если пользователь выбрал его после редактирования. Мы присваиваем это изображение свойству image объекта imageOfPlace, которое, предположительно, является UIImageView, чтобы отобразить выбранное изображение.
+     2) Затем мы устанавливаем режим отображения изображения imageOfPlace.contentMode на .scaleAspectFill. Это означает, что изображение будет масштабироваться и заполнять всю площадь UIImageView, сохраняя при этом пропорции, но возможно обрезая часть изображения.
+     3) Мы также устанавливаем свойство clipsToBounds объекта imageOfPlace в true. Это означает, что любые подслои или контент, выходящий за границы UIImageView, будет обрезан, чтобы изображение отображалось только в пределах его рамок.
+     4) Наконец, мы закрываем UIImagePickerController, вызывая метод dismiss(animated:). Это закрывает экран выбора изображения после того, как пользователь выбрал изображение, и возвращает наш контроллер к предыдущему экрану.
+     */
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        /*
-        Что делает данный метод:
-        1) imageOfPlace.image = info[.editedImage] as? UIImage: Здесь мы получаем выбранное изображение из словаря info по ключу .editedImage. Этот ключ указывает на отредактированное изображение, если пользователь выбрал его после редактирования. Мы присваиваем это изображение свойству image объекта imageOfPlace, которое, предположительно, является UIImageView, чтобы отобразить выбранное изображение.
-        2) Затем мы устанавливаем режим отображения изображения imageOfPlace.contentMode на .scaleAspectFill. Это означает, что изображение будет масштабироваться и заполнять всю площадь UIImageView, сохраняя при этом пропорции, но возможно обрезая часть изображения.
-        3) Мы также устанавливаем свойство clipsToBounds объекта imageOfPlace в true. Это означает, что любые подслои или контент, выходящий за границы UIImageView, будет обрезан, чтобы изображение отображалось только в пределах его рамок.
-        4) Наконец, мы закрываем UIImagePickerController, вызывая метод dismiss(animated:). Это закрывает экран выбора изображения после того, как пользователь выбрал изображение, и возвращает наш контроллер к предыдущему экрану.
-         */
+        
         imageOfPlace.image = info[.editedImage] as? UIImage
-
+        
         // используем свойства для настройки выбранного изображения
         imageOfPlace.contentMode = .scaleAspectFill
         imageOfPlace.clipsToBounds = true

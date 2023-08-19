@@ -24,7 +24,7 @@ class Place: Object {
         self.imageData = imageData
         self.rating = rating
     }
-    /* создаем данный метод для того, чтобы занести наши предустановленные
+    /* создаем данный метод для того, чтобы занести наши предустановленные заведения
 
     let restaurantNames = ["Burger Heroes", "Kitchen", "Bonsai", "Дастархан", "Индокитай", "X.O", "Балкан Гриль", "Sherlock Holmes", "Speak Easy", "Morris Pub", "Вкусные истории", "Классик", "Love&Life", "Шок", "Бочка"]
     
