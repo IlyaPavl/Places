@@ -16,7 +16,6 @@ class RatingControl: UIStackView {
         }
     }
     
-    // создаем массив кнопок
     private var ratingButtons = [UIButton]()
     
     @IBInspectable
@@ -46,7 +45,6 @@ class RatingControl: UIStackView {
     // MARK: - Button setup
     
     @objc func ratingButtonTapped(button: UIButton) {
-        // создаем индекс звезды
         guard let index = ratingButtons.firstIndex(of: button) else {return}
         
         let selectedRating = index + 1
@@ -73,28 +71,21 @@ class RatingControl: UIStackView {
         let emptyStar = UIImage(systemName: "star")
         let highlightedStar = UIImage(systemName: "", withConfiguration: config)
         
-        // создаем цикл для создания 5 кнопок
         for _ in 1...starCount {
-            // создаем кнопку
             let button = UIButton()
             
-            // настраиваем поведение кнопки
             button.setImage(emptyStar, for: .normal)
             button.setImage(filledStar, for: .selected)
             button.setImage(highlightedStar, for: [.highlighted, .selected])
             
-            // добавляем Constraints
             button.translatesAutoresizingMaskIntoConstraints = false
             button.widthAnchor.constraint(equalToConstant: starSize.width).isActive = true
             button.heightAnchor.constraint(equalToConstant: starSize.height).isActive = true
             
-            // добавляем кнопке действие
             button.addTarget(self, action: #selector(ratingButtonTapped(button: )), for: .touchUpInside)
             
-            // добавляем кнопку в стэквью
             addArrangedSubview(button)
             
-            // добавляем кнопку в массив
             ratingButtons.append(button)
             
         }
@@ -102,7 +93,6 @@ class RatingControl: UIStackView {
         updateButtonSelectionState()
     }
     
-    // логика установки рейтинга
     private func updateButtonSelectionState() {
         for (index, button) in ratingButtons.enumerated() {
             button.isSelected = index < rating

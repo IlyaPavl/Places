@@ -13,19 +13,16 @@ class MainViewController: UITableViewController {
     
     private let searchController = UISearchController(searchResultsController: nil)
     
-    //необходимо выполнить запрос к базе, чтобы отобразить находящиеся в ней данные. Для этого пишем results - аналог массива в realm - автообновляемый тип контейнера - и в качестве типа указываем наш Place
     private var places: Results<Place>!
     
-    // массив, в котором будут хранится результаты поиска
     private var filteredPlaces: Results<Place>!
     
-    // проверка пустой ли searchBar
     private var searchBarIsEmpty: Bool {
         guard let text = searchController.searchBar.text else {return false}
         
         return text.isEmpty
     }
-    // свойства, чтобы активировать searchBar
+
     private var isFiltering: Bool {
         return searchController.isActive && !searchBarIsEmpty
     }
@@ -38,14 +35,11 @@ class MainViewController: UITableViewController {
         self.tableView.separatorInset.left = 95
         
         
-        // чтобы отобразить все заведения на экране, необходимо инициализировать объект places. Подставляем Place.self, так как нам нужно обратиться не к модели данных, а к типу
         places = realm.objects(Place.self)
         
-        // настройка NavigationBar
         setUpMenu()
         setUpNavBar()
         
-        // настройка поиска
         searchController.searchResultsUpdater = self // сообщаем, что получателем текста в поисковой строке будет наш класс
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Поиск"
@@ -56,7 +50,6 @@ class MainViewController: UITableViewController {
     
     // MARK: - Navigation Bar Set up
     
-    // настройка сортировки
     private func setUpMenu() {
         
         func createSortingAction(title: String, keyPath: String, ascending: Bool) -> UIAction {
@@ -115,30 +108,11 @@ class MainViewController: UITableViewController {
         cell.placeImage.image = UIImage(data: place.imageData!)
         cell.starsView.rating = Int(place.rating)
         
-        /*
-         конфигурация базовой (некастомной) ячейки (новый способ, который пришел с iOS 14)
-         var cellConfig = UIListContentConfiguration.cell()
-         cellConfig.text = restaurantNames[indexPath.row]
-         cellConfig.image = UIImage(named: restaurantNames[indexPath.row])
-         cellConfig.imageProperties.cornerRadius = cell.frame.size.height / 2
-         cell.contentConfiguration = cellConfig
-         */
-        
-        /*
-         данное условие было создано тогда, когда у нас еще не было модели данных
-         if place.image == nil {
-         cell.placeImage.image = UIImage(named: place.restaurantImage!)
-         } else {
-         cell.placeImage.image = place.image
-         }
-         */
-        
         return cell
     }
     
     // MARK: - Table view data delegate
     
-    // конфигурация действия удалить
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let place = places[indexPath.row]
@@ -146,30 +120,6 @@ class MainViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
-    
-    /* данный метод удаляет элементы из списка и базы. Однако он подходит для того, когда у нас несколько действий для одного свайпа
-     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-     let place = places[indexPath.row]
-     
-     let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
-     StorageManager.deleteObject(place)
-     tableView.deleteRows(at: [indexPath], with: .automatic)
-     }
-     
-     return UISwipeActionsConfiguration(actions: [deleteAction])
-     }
-     */
-    
-    /*
-     1. override func prepare(for segue: UIStoryboardSegue, sender: Any?) {: Это переопределение функции prepare(for:sender:), которая вызывается перед переходом на другой экран с помощью segue (перехода между экранами в iOS). Это дает вам возможность подготовить данные для следующего экрана.
-     2. super.prepare(for: segue, sender: sender): Вызывает родительскую реализацию этой функции, чтобы она также выполнила свои задачи (если таковые есть). Это важно для правильной работы встроенной логики переходов.
-     3. guard segue.identifier == "showDetail" else { return }: Здесь происходит проверка идентификатора segue. Эта строка говорит: “Если идентификатор segue не равен ‘showDetail’, то просто верни управление и не выполняй ниже указанный код”.
-     4. guard let indexPath = tableView.indexPathForSelectedRow else { return }: В данной строке мы получаем индекс пути выбранной ячейки таблицы. Если ячейка не выбрана (например, если функция была вызвана не через выбор ячейки, а по другому триггеру), то выполняется return, и функция завершается.
-     5. let place = isFiltering ? filteredPlaces[indexPath.row] : places[indexPath.row]: В данной строке определяется объект “place”, который будет передан на следующий экран. Если в данный момент включен поиск (переменная isFiltering равна true), то берется объект из отфильтрованного списка filteredPlaces, иначе из основного списка places, исходя из выбранного индекса пути.
-     6. let navigVC = segue.destination as! UINavigationController: Эта строка извлекает навигационный контроллер (UINavigationController), который будет использован для перехода. Обратите внимание, что предполагается, что переход ведет к UINavigationController.
-     7. let editVC = navigVC.topViewController as! NewPlaceTableViewController: Здесь мы получаем верхний (текущий) контроллер в навигационной иерархии, который предполагается использовать для редактирования информации о месте. Важно, чтобы этот контроллер был типа NewPlaceTableViewController.
-     8. editVC.currentPlace = place: Эта строка устанавливает свойство currentPlace контроллера, который будет использоваться для редактирования. Это свойство будет содержать информацию о выбранном месте и передаст ее на следующий экран для отображения или редактирования.
-     */
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
@@ -194,15 +144,6 @@ class MainViewController: UITableViewController {
     }
     
 }
-
-/*
- 1. extension MainViewController: UISearchResultsUpdating {: Эта строка начинает расширение (extension) класса MainViewController и указывает, что класс будет реализовывать протокол UISearchResultsUpdating. Протокол UISearchResultsUpdating используется для обработки обновлений поисковых результатов для контроллера поиска.
- 2. func updateSearchResults(for searchController: UISearchController) {: Это функция, требуемая протоколом UISearchResultsUpdating, и она вызывается при обновлении результатов поиска. Она принимает в качестве параметра объект UISearchController, который содержит информацию о состоянии поиска.
- 3. filterContentForSearchText(searchController.searchBar.text!): Здесь вызывается функция filterContentForSearchText, передавая ей текст из строки поиска в searchBar контроллера поиска. searchController.searchBar.text! означает, что мы передаем текст из строки поиска, добавив “!” для извлечения фактического текста.
- 4. private func filterContentForSearchText(_ searchText: String) {: Это приватная функция, которая фильтрует содержимое массива places в соответствии с заданным текстом поиска.
- 5. filteredPlaces = places.filter("name CONTAINS[c] %@ OR location CONTAINS[c] %@ OR type CONTAINS[c] %@", searchText, searchText, searchText): В этой строке мы фильтруем массив places, используя метод filter с форматированным запросом. Мы ищем объекты, в которых поле “name” (имя), “location” (местоположение) или “type” (тип) содержат (case-insensitive, указанное [c]) заданный текст поиска. Результат фильтрации сохраняется в массиве filteredPlaces.
- 6. tableView.reloadData(): После того как массив filteredPlaces обновлен, вызывается метод перезагрузки таблицы reloadData(), чтобы обновить отображение данных в таблице.
- */
 
 extension MainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
